@@ -5,6 +5,7 @@ const YAML = require('yamljs');
 const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const serverless = require('serverless-http');
+require('dotenv').config();
 
 // Path adjustment for Vercel structure
 const db = require('./models'); // ensure models folder is outside `api/`

@@ -1,4 +1,4 @@
-const db = require('../api/models');
+const db = require('../models');
 const Tol = db.Tol;
 
 exports.create = async (req, res) => {

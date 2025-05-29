@@ -1,13 +1,13 @@
 const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASS,
+  'u864324480_speedpay', // database
+  'u864324480_speedpay', // username
+  'Speedpay123',          // password
   {
-    host: process.env.DB_HOST,
+    host: '153.92.15.23',
     dialect: 'mysql',
-    logging: false, // Optional: untuk nonaktifkan log query SQL
+    logging: false, // Nonaktifkan log query SQL
   }
 );
 

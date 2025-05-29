@@ -1,4 +1,4 @@
-const db = require('../api/models');
+const db = require('../models');
 const MerkMobil = db.MerkMobil;
 
 exports.create = async (req, res) => {

@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "u864324480_speedpay",
+    "password": "Speedpay123",
+    "database": "u864324480_speedpay",
+    "host": "153.92.15.23",
+    "dialect": "mysql"
+  }
+}
