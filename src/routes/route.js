@@ -1,5 +1,7 @@
 import express from 'express';
 
+import { controllerLogin, controllerRegister } from '../controllers/auth.js';
+
 import {
   create as createAdmin,
   findAll as findAllAdmin,
@@ -106,5 +108,8 @@ router.get('/log', findAllLog);
 router.get('/log/:id', findOneLog);
 router.put('/log/:id', updateLog);
 router.delete('/log/:id', deleteLog);
+
+router.post('/login', controllerLogin);
+router.post('/register', controllerRegister);
 
 export default router;
