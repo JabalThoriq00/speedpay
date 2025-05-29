@@ -12,7 +12,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Swagger setup
-const swaggerDocument = YAML.load("./post-man/swagger.yaml");
+const swaggerPath = path.resolve(__dirname, "post-man", "swagger.yaml");
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(cors());
