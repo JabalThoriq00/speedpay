@@ -27,7 +27,7 @@ db.sequelize.sync().then(() => {
 });
 
 // Routes
-app.use('/users', Routes);
+app.use('/', Routes);
 
 // Default route
 app.get('/', (req, res) => {

@@ -1,9 +1,71 @@
 openapi: 3.0.0
 info:
-  title: My API
+  title: SpeedPay API
   version: 1.0.0
+servers:
+  - url: http://localhost:3000
+
 paths:
-  /users:
+  /merk:
+    get:
+      summary: Get all merk
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Create merk
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Merk'
+      responses:
+        '201':
+          description: Created
+
+  /merk/{id}:
+    get:
+      summary: Get merk by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Update merk
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Merk'
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: Delete merk
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted
+
+  /user:
     get:
       summary: Get all users
       responses:
@@ -16,12 +78,112 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                email:
-                  type: string
+              $ref: '#/components/schemas/User'
       responses:
         '201':
           description: Created
+
+  /user/{userid}:
+    get:
+      summary: Get user by ID
+      parameters:
+        - in: path
+          name: userid
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Update user
+      parameters:
+        - in: path
+          name: userid
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: Delete user
+      parameters:
+        - in: path
+          name: userid
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted
+
+  /transaksi:
+    get: { summary: Get all transaksi, responses: { '200': { description: OK } } }
+    post: { summary: Create transaksi, requestBody: { required: true, content: { application/json: { schema: { type: object } } } }, responses: { '201': { description: Created } } }
+
+  /transaksi/{id}:
+    get: { summary: Get transaksi by ID, parameters: [ { in: path, name: id, required: true, schema: { type: integer } } ], responses: { '200': { description: OK } } }
+    put: { summary: Update transaksi, parameters: [ { in: path, name: id, required: true, schema: { type: integer } } ], requestBody: { required: true, content: { application/json: { schema: { type: object } } } }, responses: { '200': { description: Updated } } }
+    delete: { summary: Delete transaksi, parameters: [ { in: path, name: id, required: true, schema: { type: integer } } ], responses: { '204': { description: Deleted } } }
+
+  /tol:
+    get: { summary: Get all tol, responses: { '200': { description: OK } } }
+    post: { summary: Create tol, requestBody: { required: true, content: { application/json: { schema: { type: object } } } }, responses: { '201': { description: Created } } }
+
+  /tol/{id}:
+    get: { summary: Get tol by ID, parameters: [ { in: path, name: id, required: true, schema: { type: integer } } ], responses: { '200': { description: OK } } }
+    put: { summary: Update tol, parameters: [ { in: path, name: id, required: true, schema: { type: integer } } ], requestBody: { required: true, content: { application/json: { schema: { type: object } } } }, responses: { '200': { description: Updated } } }
+    delete: { summary: Delete tol, parameters: [ { in: path, name: id, required: true, schema: { type: integer } } ], responses: { '204': { description: Deleted } } }
+
+  /admin:
+    get: { summary: Get all admin, responses: { '200': { description: OK } } }
+    post: { summary: Create admin, requestBody: { required: true, content: { application/json: { schema: { type: object } } } }, responses: { '201': { description: Created } } }
+
+  /admin/{id}:
+    get: { summary: Get admin by ID, parameters: [ { in: path, name: id, required: true, schema: { type: integer } } ], responses: { '200': { description: OK } } }
+    put: { summary: Update admin, parameters: [ { in: path, name: id, required: true, schema: { type: integer } } ], requestBody: { required: true, content: { application/json: { schema: { type: object } } } }, responses: { '200': { description: Updated } } }
+    delete: { summary: Delete admin, parameters: [ { in: path, name: id, required: true, schema: { type: integer } } ], responses: { '204': { description: Deleted } } }
+
+  /mobil:
+    get: { summary: Get all jenis mobil, responses: { '200': { description: OK } } }
+    post: { summary: Create jenis mobil, requestBody: { required: true, content: { application/json: { schema: { type: object } } } }, responses: { '201': { description: Created } } }
+
+  /mobil/{userid}:
+    get: { summary: Get jenis mobil by ID, parameters: [ { in: path, name: userid, required: true, schema: { type: string } } ], responses: { '200': { description: OK } } }
+    put: { summary: Update jenis mobil, parameters: [ { in: path, name: userid, required: true, schema: { type: string } } ], requestBody: { required: true, content: { application/json: { schema: { type: object } } } }, responses: { '200': { description: Updated } } }
+    delete: { summary: Delete jenis mobil, parameters: [ { in: path, name: userid, required: true, schema: { type: string } } ], responses: { '204': { description: Deleted } } }
+
+  /log:
+    get: { summary: Get all logs, responses: { '200': { description: OK } } }
+    post: { summary: Create log, requestBody: { required: true, content: { application/json: { schema: { type: object } } } }, responses: { '201': { description: Created } } }
+
+  /log/{id}:
+    get: { summary: Get log by ID, parameters: [ { in: path, name: id, required: true, schema: { type: integer } } ], responses: { '200': { description: OK } } }
+    put: { summary: Update log, parameters: [ { in: path, name: id, required: true, schema: { type: integer } } ], requestBody: { required: true, content: { application/json: { schema: { type: object } } } }, responses: { '200': { description: Updated } } }
+    delete: { summary: Delete log, parameters: [ { in: path, name: id, required: true, schema: { type: integer } } ], responses: { '204': { description: Deleted } } }
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        userid:
+          type: string
+        password:
+          type: string
+        nama:
+          type: string
+        email:
+          type: string
+    Merk:
+      type: object
+      properties:
+        nama:
+          type: string
