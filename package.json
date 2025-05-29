@@ -1,10 +1,9 @@
 {
-  "name": "speedpay-api",
+  "name": "SpeedPayApp",
   "version": "1.0.0",
   "description": "CRUD API for SpeedPay using Express, Sequelize, MySQL",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
     "dev": "vercel dev"
   },
   "dependencies": {
@@ -13,8 +12,7 @@
     "express": "^5.1.0",
     "mysql2": "^3.14.1",
     "sequelize": "^6.37.7",
-    "serverless-http": "^3.2.0",
-    "speedpay-api": "file:",
+    "SpeedPayApp": "file:",
     "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
   },
