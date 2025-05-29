@@ -1,7 +1,7 @@
-const db = require('../models');
-const JenisMobil = db.JenisMobil;
+import db from '../models/index.js';
+const { JenisMobil } = db;
 
-exports.create = async (req, res) => {
+export const create = async (req, res) => {
   try {
     const data = await JenisMobil.create(req.body);
     res.status(201).json(data);
@@ -10,7 +10,7 @@ exports.create = async (req, res) => {
   }
 };
 
-exports.findAll = async (req, res) => {
+export const findAll = async (req, res) => {
   try {
     const result = await JenisMobil.findAll();
     res.json(result);
@@ -19,7 +19,7 @@ exports.findAll = async (req, res) => {
   }
 };
 
-exports.findOne = async (req, res) => {
+export const findOne = async (req, res) => {
   try {
     const item = await JenisMobil.findByPk(req.params.id);
     if (item) res.json(item);
@@ -29,7 +29,7 @@ exports.findOne = async (req, res) => {
   }
 };
 
-exports.update = async (req, res) => {
+export const update = async (req, res) => {
   try {
     const [updated] = await JenisMobil.update(req.body, {
       where: { id: req.params.id },
@@ -45,7 +45,8 @@ exports.update = async (req, res) => {
   }
 };
 
-exports.delete = async (req, res) => {
+// Ganti nama dari 'delete' ke 'deleteData'
+export const deleteData = async (req, res) => {
   try {
     const deleted = await JenisMobil.destroy({
       where: { id: req.params.id },

@@ -1,7 +1,7 @@
-const db = require('../models');
-const MerkMobil = db.MerkMobil;
+import db from '../models/index.js';
+const {MerkMobil} = db;
 
-exports.create = async (req, res) => {
+export const create = async (req, res) => {
   try {
     const result = await MerkMobil.create(req.body);
     res.status(201).json(result);
@@ -10,7 +10,7 @@ exports.create = async (req, res) => {
   }
 };
 
-exports.findAll = async (req, res) => {
+export const findAll = async (req, res) => {
   try {
     const data = await MerkMobil.findAll();
     res.json(data);
@@ -19,7 +19,7 @@ exports.findAll = async (req, res) => {
   }
 };
 
-exports.findOne = async (req, res) => {
+export const findOne = async (req, res) => {
   try {
     const data = await MerkMobil.findByPk(req.params.id);
     if (data) res.json(data);
@@ -29,7 +29,7 @@ exports.findOne = async (req, res) => {
   }
 };
 
-exports.update = async (req, res) => {
+export const update = async (req, res) => {
   try {
     const [updated] = await MerkMobil.update(req.body, {
       where: { id: req.params.id }
@@ -45,7 +45,7 @@ exports.update = async (req, res) => {
   }
 };
 
-exports.delete = async (req, res) => {
+export const deleteData  = async (req, res) => {
   try {
     const deleted = await MerkMobil.destroy({
       where: { id: req.params.id }

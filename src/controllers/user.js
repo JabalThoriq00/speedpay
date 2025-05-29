@@ -1,7 +1,7 @@
-const db = require('../models');
-const User = db.User;
+import db from '../models/index.js';
+const {User} = db;
 
-exports.create = async (req, res) => {
+export const create = async (req, res) => {
   try {
     const user = await User.create(req.body);
     res.status(201).json(user);
@@ -10,7 +10,7 @@ exports.create = async (req, res) => {
   }
 };
 
-exports.findAll = async (req, res) => {
+export const findAll = async (req, res) => {
   try {
     const users = await User.findAll();
     res.json(users);
@@ -19,7 +19,7 @@ exports.findAll = async (req, res) => {
   }
 };
 
-exports.findOne = async (req, res) => {
+export const findOne = async (req, res) => {
   try {
     const user = await User.findByPk(req.params.userid);
     if (user) res.json(user);
@@ -29,7 +29,7 @@ exports.findOne = async (req, res) => {
   }
 };
 
-exports.update = async (req, res) => {
+export const update = async (req, res) => {
   try {
     const [updated] = await User.update(req.body, {
       where: { userid: req.params.userid }
@@ -45,7 +45,7 @@ exports.update = async (req, res) => {
   }
 };
 
-exports.delete = async (req, res) => {
+export const deleteData  = async (req, res) => {
   try {
     const deleted = await User.destroy({
       where: { userid: req.params.userid }

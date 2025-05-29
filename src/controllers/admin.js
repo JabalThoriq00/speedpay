@@ -1,7 +1,7 @@
-const db = require('../models');
-const Admin = db.Admin;
+import db from '../models/index.js';
+const { Admin } = db;
 
-exports.create = async (req, res) => {
+export const create = async (req, res) => {
   try {
     const newAdmin = await Admin.create(req.body);
     res.status(201).json(newAdmin);
@@ -10,7 +10,7 @@ exports.create = async (req, res) => {
   }
 };
 
-exports.findAll = async (req, res) => {
+export const findAll = async (req, res) => {
   try {
     const admins = await Admin.findAll();
     res.json(admins);
@@ -19,7 +19,7 @@ exports.findAll = async (req, res) => {
   }
 };
 
-exports.findOne = async (req, res) => {
+export const findOne = async (req, res) => {
   try {
     const admin = await Admin.findByPk(req.params.userid);
     if (admin) res.json(admin);
@@ -29,7 +29,7 @@ exports.findOne = async (req, res) => {
   }
 };
 
-exports.update = async (req, res) => {
+export const update = async (req, res) => {
   try {
     const [updated] = await Admin.update(req.body, {
       where: { userid: req.params.userid },
@@ -45,7 +45,7 @@ exports.update = async (req, res) => {
   }
 };
 
-exports.delete = async (req, res) => {
+export const deleteData = async (req, res) => {
   try {
     const deleted = await Admin.destroy({
       where: { userid: req.params.userid },

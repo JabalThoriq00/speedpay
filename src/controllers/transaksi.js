@@ -1,7 +1,7 @@
-const db = require('../models');
-const Transaksi = db.Transaksi;
+import db from '../models/index.js';
+const {Transaksi} = db;
 
-exports.create = async (req, res) => {
+export const create = async (req, res) => {
   try {
     const transaksi = await Transaksi.create(req.body);
     res.status(201).json(transaksi);
@@ -10,7 +10,7 @@ exports.create = async (req, res) => {
   }
 };
 
-exports.findAll = async (req, res) => {
+export const findAll = async (req, res) => {
   try {
     const transaksi = await Transaksi.findAll();
     res.json(transaksi);
@@ -19,7 +19,7 @@ exports.findAll = async (req, res) => {
   }
 };
 
-exports.findOne = async (req, res) => {
+export const findOne = async (req, res) => {
   try {
     const transaksi = await Transaksi.findByPk(req.params.id);
     if (transaksi) res.json(transaksi);
@@ -29,7 +29,7 @@ exports.findOne = async (req, res) => {
   }
 };
 
-exports.update = async (req, res) => {
+export const update = async (req, res) => {
   try {
     const [updated] = await Transaksi.update(req.body, {
       where: { id: req.params.id }
@@ -45,7 +45,7 @@ exports.update = async (req, res) => {
   }
 };
 
-exports.delete = async (req, res) => {
+export const deleteData  = async (req, res) => {
   try {
     const deleted = await Transaksi.destroy({
       where: { id: req.params.id }

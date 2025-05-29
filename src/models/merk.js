@@ -1,33 +1,39 @@
-module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('jenis_mobil', {
+export default (sequelize, DataTypes) => {
+  const MerkMobil = sequelize.define('MerkMobil', {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    id_merk_mobil: {
-      type: DataTypes.INTEGER,
-    },
     nama: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
     create_by: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
     date_create: {
       type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: DataTypes.NOW,
     },
     update_by: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
     date_update: {
       type: DataTypes.DATE,
+      allowNull: true,
     },
     data: {
       type: DataTypes.TEXT,
+      allowNull: true,
     },
   }, {
-    tableName: 'tb_jenis_mobil',
+    tableName: 'tb_merk_mobil',
     timestamps: false,
   });
+
+  return MerkMobil;
 };
