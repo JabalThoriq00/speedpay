@@ -1,10 +1,10 @@
-const db = require('../models');
-const MerkMobil = db.MerkMobil;
+const db = require('../api/models');
+const Transaksi = db.Transaksi;
 
 exports.create = async (req, res) => {
   try {
-    const result = await MerkMobil.create(req.body);
-    res.status(201).json(result);
+    const transaksi = await Transaksi.create(req.body);
+    res.status(201).json(transaksi);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -12,8 +12,8 @@ exports.create = async (req, res) => {
 
 exports.findAll = async (req, res) => {
   try {
-    const data = await MerkMobil.findAll();
-    res.json(data);
+    const transaksi = await Transaksi.findAll();
+    res.json(transaksi);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -21,8 +21,8 @@ exports.findAll = async (req, res) => {
 
 exports.findOne = async (req, res) => {
   try {
-    const data = await MerkMobil.findByPk(req.params.id);
-    if (data) res.json(data);
+    const transaksi = await Transaksi.findByPk(req.params.id);
+    if (transaksi) res.json(transaksi);
     else res.status(404).json({ message: 'Data not found' });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -31,12 +31,12 @@ exports.findOne = async (req, res) => {
 
 exports.update = async (req, res) => {
   try {
-    const [updated] = await MerkMobil.update(req.body, {
+    const [updated] = await Transaksi.update(req.body, {
       where: { id: req.params.id }
     });
     if (updated) {
-      const updatedData = await MerkMobil.findByPk(req.params.id);
-      res.json(updatedData);
+      const updatedTransaksi = await Transaksi.findByPk(req.params.id);
+      res.json(updatedTransaksi);
     } else {
       res.status(404).json({ message: 'Data not found' });
     }
@@ -47,7 +47,7 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
   try {
-    const deleted = await MerkMobil.destroy({
+    const deleted = await Transaksi.destroy({
       where: { id: req.params.id }
     });
     if (deleted) {

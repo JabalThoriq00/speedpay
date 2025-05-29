@@ -1,4 +1,4 @@
-const db = require('../models');
+const db = require('../api/models');
 const JenisMobil = db.JenisMobil;
 
 exports.create = async (req, res) => {

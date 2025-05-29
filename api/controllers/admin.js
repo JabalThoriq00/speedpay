@@ -1,4 +1,4 @@
-const db = require('../models');
+const db = require('../api/models');
 const Admin = db.Admin;
 
 exports.create = async (req, res) => {

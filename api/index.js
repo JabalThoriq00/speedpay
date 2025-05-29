@@ -7,8 +7,8 @@ const swaggerUi = require('swagger-ui-express');
 const serverless = require('serverless-http');
 
 // Path adjustment for Vercel structure
-const db = require('../models'); // ensure models folder is outside `api/`
-const Routes = require('../routes/route'); // same here
+const db = require('./models'); // ensure models folder is outside `api/`
+const Routes = require('./routes/route'); // same here
 
 const app = express();
 
