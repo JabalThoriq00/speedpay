@@ -11,8 +11,12 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 // Models
-db.User = require('./admin')(sequelize, Sequelize);
+db.Admin = require('./admin')(sequelize, Sequelize);
 db.JenisMobil = require('./jenisMobil')(sequelize, Sequelize);
-db.Admin = require('./jenisMobil')(sequelize, Sequelize);
+db.Log = require('./log')(sequelize, Sequelize);
+db.Tol = require('./tol')(sequelize, Sequelize);
+db.Transaksi = require('./transaksi')(sequelize, Sequelize);
+db.User = require('./user')(sequelize, Sequelize);
+db.MerkMobil = require('./merk')(sequelize, Sequelize);
 
 module.exports = db;

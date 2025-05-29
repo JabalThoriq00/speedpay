@@ -1,15 +1,30 @@
-const db = require('../db');
-
-const Transaksi = {
-  getAll: callback => {
-    db.query('SELECT * FROM tb_transaksi', callback);
-  },
-  getById: (id, callback) => {
-    db.query('SELECT * FROM tb_transaksi WHERE id = ?', [id], callback);
-  },
-  getByUserId: (userId, callback) => {
-    db.query('SELECT * FROM tb_transaksi WHERE id_user = ?', [userId], callback);
-  }
+module.exports = (sequelize, DataTypes) => {
+  return sequelize.define('transaksi', {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true
+    },
+    id_tol: {
+      type: DataTypes.INTEGER
+    },
+    id_user: {
+      type: DataTypes.INTEGER
+    },
+    flag: {
+      type: DataTypes.STRING
+    },
+    status: {
+      type: DataTypes.STRING
+    },
+    date_create: {
+      type: DataTypes.DATE
+    },
+    data: {
+      type: DataTypes.TEXT
+    }
+  }, {
+    tableName: 'tb_transaksi',
+    timestamps: false
+  });
 };
-
-module.exports = Transaksi;
