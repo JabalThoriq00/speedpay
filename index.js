@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import YAML from "yamljs";
+import swaggerUi from "swagger-ui-express";
 import "./src/config/mysql.js"; // koneksi Sequelize
 import router from "./src/routes/route.js"; // import router utama
 
@@ -8,6 +10,10 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Swagger setup
+const swaggerDocument = YAML.load("./post-man/swagger.yaml");
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(cors());
 app.use(express.json());
@@ -21,4 +27,5 @@ app.all(/.*/, (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
+  console.log(`📚 Swagger docs available at http://localhost:${PORT}/api-docs`);
 });
