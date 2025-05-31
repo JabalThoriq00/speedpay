@@ -1,6 +1,7 @@
 import express from 'express';
 
 import { controllerLogin, controllerRegister } from '../controllers/auth.js';
+import { postRfidData } from '../controllers/rfid.js';
 
 import {
   create as createAdmin,
@@ -111,5 +112,5 @@ router.delete('/log/:id', deleteLog);
 
 router.post('/login', controllerLogin);
 router.post('/register', controllerRegister);
-
+router.post('/rfid', postRfidData);
 export default router;

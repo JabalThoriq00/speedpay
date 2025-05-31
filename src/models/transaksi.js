@@ -31,7 +31,7 @@ export default (sequelize, DataTypes) => {
       allowNull: true
     }
   }, {
-    tableName: 'tb_transaksi',
+    tableName: 'tb_status',
     timestamps: false
   });
 
