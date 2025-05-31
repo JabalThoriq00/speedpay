@@ -25,7 +25,7 @@ export const findOne = async (req, res) => {
 
     if (data) {
       res.setHeader('Content-Type', 'text/plain');
-      res.send(data.nama); // Kirim string langsung
+      res.send(`###${data.nama}###`);
     } else {
       res.status(404).send('Data not found'); // Kirim juga sebagai plain text agar konsisten
     }
