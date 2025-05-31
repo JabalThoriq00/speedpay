@@ -21,9 +21,14 @@ export const findAll = async (req, res) => {
 
 export const findOne = async (req, res) => {
   try {
-    const data = await Tol.findByPk(req.params.id);
-    if (data) res.json(data);
-    else res.status(404).json({ message: "Data not found" });
+   const data = await Tol.findByPk(req.params.id);
+
+    if (data) {
+      res.setHeader('Content-Type', 'text/plain');
+      res.send(data.nama); // Kirim string langsung
+    } else {
+      res.status(404).send('Data not found'); // Kirim juga sebagai plain text agar konsisten
+    }
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
