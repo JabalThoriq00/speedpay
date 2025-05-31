@@ -22,7 +22,7 @@ export const findAll = async (req, res) => {
 export const findOne = async (req, res) => {
   try {
     const data = await Tol.findByPk(req.params.id);
-    if (data) res.json(data);
+    if (data) res.json(data.nama);
     else res.status(404).json({ message: "Data not found" });
   } catch (err) {
     res.status(500).json({ error: err.message });
