@@ -124,5 +124,5 @@ router.post('/rfid', postRfidData);
 router.get('/saldo/:userid', cekSaldo);
 router.post('/topup', topUp);
 router.post('/tarik', tarikSaldoBerdasarkanGolongan);
-router.get('/transaksi/:userid', riwayatTransaksi);
+router.get('/transaksi-saldo/:userid', riwayatTransaksi);
 export default router;
