@@ -98,17 +98,17 @@ export const tarikSaldoBerdasarkanGolongan = async (req, res) => {
 
     // ✅ Buat transaksi pengurangan saldo
     await TransaksiSaldoModel.create({
-      userid: user.id,
+      userid: user.userid, // ✅ perbaikan
       jenis_transaksi: 'TARIK',
       jumlah: -biaya,
       keterangan: `Tarik saldo - ${jenisMobil.nama}`
     });
 
     // 🔄 Ambil user terbaru untuk saldo update
-    const updatedUser = await UserModel.findByPk(user.id);
+    const updatedUser = await UserModel.findByPk(user.userid);
 
     // 🔔 Kirim notifikasi via socket
-    notifyUserSaldo(user.id, {
+    notifyUserSaldo(user.userid, {
       saldo: updatedUser?.saldo ?? '0',
       message: `Saldo berhasil ditarik sebesar Rp ${biaya}`
     });
