@@ -8,6 +8,7 @@ import TolModel from './tol.js';
 import TransaksiModel from './transaksi.js';
 import UserModel from './user.js';
 import MerkModel from './merk.js';
+import TransaksiSaldoModel from './transaksiSaldo.js';
 
 const db = {
   Sequelize,
@@ -19,6 +20,7 @@ const db = {
   Transaksi: TransaksiModel(sequelize, Sequelize),
   User: UserModel(sequelize, Sequelize),
   MerkMobil: MerkModel(sequelize, Sequelize),
+  TransaksiSaldo: TransaksiSaldoModel(sequelize, Sequelize),
 };
 
 export default db;

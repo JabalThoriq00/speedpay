@@ -59,6 +59,12 @@ import {
   deleteData as deleteMerk,
 } from '../controllers/merk.js';
 
+import {
+  cekSaldo,
+  topUp,
+  tarikSaldoBerdasarkanGolongan
+} from '../controllers/saldoController.js';
+
 const router = express.Router();
 
 // Merk
@@ -113,4 +119,8 @@ router.delete('/log/:id', deleteLog);
 router.post('/login', controllerLogin);
 router.post('/register', controllerRegister);
 router.post('/rfid', postRfidData);
+
+router.get('/saldo/:userid', cekSaldo);
+router.post('/topup', topUp);
+router.post('/tarik', tarikSaldoBerdasarkanGolongan);
 export default router;
