@@ -55,14 +55,24 @@ export const topUp = async (req, res) => {
 export const tarikSaldoBerdasarkanGolongan = async (req, res) => {
   const { userid } = req.body;
 
+  if (!userid) {
+    return res.status(400).json({ message: 'User ID wajib diisi' });
+  }
+
   try {
+    // 🔍 Ambil user
     const user = await UserModel.findByPk(userid);
-    if (!user) return res.status(404).json({ message: 'User tidak ditemukan' });
+    if (!user) {
+      return res.status(404).json({ message: 'User tidak ditemukan' });
+    }
 
+    // 🔍 Ambil jenis mobil
     const jenisMobil = await JenisMobilModel.findByPk(user.id_jenis_mobil);
-    if (!jenisMobil) return res.status(404).json({ message: 'Jenis mobil tidak ditemukan' });
+    if (!jenisMobil) {
+      return res.status(404).json({ message: 'Jenis mobil tidak ditemukan' });
+    }
 
-    // Tarif berdasarkan golongan
+    // 💰 Tarif berdasarkan golongan
     const tarifPerGolongan = {
       "Golongan I": 10000,
       "Golongan II": 15000,
@@ -71,14 +81,21 @@ export const tarikSaldoBerdasarkanGolongan = async (req, res) => {
     };
 
     const biaya = tarifPerGolongan[jenisMobil.nama];
-    if (!biaya) return res.status(400).json({ message: 'Golongan tidak dikenali' });
+    if (biaya === undefined) {
+      return res.status(400).json({ message: `Golongan '${jenisMobil.nama}' tidak dikenali` });
+    }
 
-    // Cek saldo cukup
-    if (parseFloat(user.saldo) < biaya) {
+    const saldo = parseFloat(user.saldo);
+    if (isNaN(saldo)) {
+      return res.status(400).json({ message: 'Saldo user tidak valid' });
+    }
+
+    // ❌ Cek saldo cukup
+    if (saldo < biaya) {
       return res.status(400).json({ message: 'Saldo tidak mencukupi' });
     }
 
-    // ⛔ Tidak perlu update saldo manual
+    // ✅ Buat transaksi (saldo otomatis berkurang)
     await TransaksiSaldoModel.create({
       userid,
       jenis_transaksi: 'TARIK',
@@ -86,16 +103,20 @@ export const tarikSaldoBerdasarkanGolongan = async (req, res) => {
       keterangan: `Tarik saldo - ${jenisMobil.nama}`
     });
 
-    // ✅ Ambil saldo terbaru
+    // 🔄 Ambil user terbaru
     const updatedUser = await UserModel.findByPk(userid);
 
-    res.json({ message: 'Saldo berhasil ditarik', saldo_akhir: updatedUser.saldo });
+    return res.status(200).json({
+      message: 'Saldo berhasil ditarik',
+      saldo_akhir: updatedUser?.saldo ?? '0'
+    });
 
   } catch (err) {
-    console.error('Tarik Saldo Error:', err);
-    res.status(500).json({ message: 'Gagal melakukan penarikan saldo' });
+    console.error('Tarik Saldo Error:', err.message);
+    return res.status(500).json({ message: 'Gagal melakukan penarikan saldo' });
   }
 };
+
 
 export const riwayatTransaksi = async (req, res) => {
   const { userid } = req.params;
