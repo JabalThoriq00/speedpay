@@ -105,6 +105,11 @@ export const tarikSaldoBerdasarkanGolongan = async (req, res) => {
 
     // 🔄 Ambil user terbaru
     const updatedUser = await UserModel.findByPk(userid);
+    
+    notifyUserSaldo(userid, {
+      saldo: updatedUser?.saldo ?? '0',
+      message: `Saldo berhasil ditarik sebesar Rp ${biaya}`
+    });
 
     return res.status(200).json({
       message: 'Saldo berhasil ditarik',
