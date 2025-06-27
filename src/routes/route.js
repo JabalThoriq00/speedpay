@@ -62,7 +62,8 @@ import {
 import {
   cekSaldo,
   topUp,
-  tarikSaldoBerdasarkanGolongan
+  tarikSaldoBerdasarkanGolongan,
+  riwayatTransaksi
 } from '../controllers/saldoController.js';
 
 const router = express.Router();
@@ -123,4 +124,5 @@ router.post('/rfid', postRfidData);
 router.get('/saldo/:userid', cekSaldo);
 router.post('/topup', topUp);
 router.post('/tarik', tarikSaldoBerdasarkanGolongan);
+router.get('/transaksi/:userid', riwayatTransaksi);
 export default router;

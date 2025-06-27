@@ -1,6 +1,10 @@
 import db from '../models/index.js';
 
-const { User: UserModel, JenisMobil: JenisMobilModel, TransaksiSaldo: TransaksiSaldoModel } = db;
+const {
+  User: UserModel,
+  JenisMobil: JenisMobilModel,
+  TransaksiSaldo: TransaksiSaldoModel
+} = db;
 
 // ✅ Cek Saldo
 export const cekSaldo = async (req, res) => {
@@ -16,7 +20,7 @@ export const cekSaldo = async (req, res) => {
   }
 };
 
-// ✅ Top Up Saldo
+// ✅ Top Up (dengan trigger)
 export const topUp = async (req, res) => {
   const { userid, jumlah, keterangan } = req.body;
 
@@ -29,9 +33,7 @@ export const topUp = async (req, res) => {
       return res.status(400).json({ message: 'Jumlah tidak valid' });
     }
 
-    user.saldo = parseFloat(user.saldo) + nominal;
-    await user.save();
-
+    // ⛔ Tidak perlu update saldo manual
     await TransaksiSaldoModel.create({
       userid,
       jenis_transaksi: 'TOPUP',
@@ -39,14 +41,17 @@ export const topUp = async (req, res) => {
       keterangan
     });
 
-    res.json({ message: 'Top up berhasil', saldo: user.saldo });
+    // ✅ Ambil saldo terbaru
+    const updatedUser = await UserModel.findByPk(userid);
+
+    res.json({ message: 'Top up berhasil', saldo: updatedUser.saldo });
   } catch (err) {
     console.error('Top Up Error:', err);
     res.status(500).json({ message: 'Terjadi kesalahan saat top up' });
   }
 };
 
-// ✅ Tarik Saldo Berdasarkan Golongan
+// ✅ Tarik saldo berdasarkan golongan (dengan trigger)
 export const tarikSaldoBerdasarkanGolongan = async (req, res) => {
   const { userid } = req.body;
 
@@ -68,13 +73,12 @@ export const tarikSaldoBerdasarkanGolongan = async (req, res) => {
     const biaya = tarifPerGolongan[jenisMobil.nama];
     if (!biaya) return res.status(400).json({ message: 'Golongan tidak dikenali' });
 
+    // Cek saldo cukup
     if (parseFloat(user.saldo) < biaya) {
       return res.status(400).json({ message: 'Saldo tidak mencukupi' });
     }
 
-    user.saldo = parseFloat(user.saldo) - biaya;
-    await user.save();
-
+    // ⛔ Tidak perlu update saldo manual
     await TransaksiSaldoModel.create({
       userid,
       jenis_transaksi: 'TARIK',
@@ -82,10 +86,33 @@ export const tarikSaldoBerdasarkanGolongan = async (req, res) => {
       keterangan: `Tarik saldo - ${jenisMobil.nama}`
     });
 
-    res.json({ message: 'Saldo berhasil ditarik', saldo_akhir: user.saldo });
+    // ✅ Ambil saldo terbaru
+    const updatedUser = await UserModel.findByPk(userid);
+
+    res.json({ message: 'Saldo berhasil ditarik', saldo_akhir: updatedUser.saldo });
 
   } catch (err) {
     console.error('Tarik Saldo Error:', err);
     res.status(500).json({ message: 'Gagal melakukan penarikan saldo' });
+  }
+};
+
+export const riwayatTransaksi = async (req, res) => {
+  const { userid } = req.params;
+
+  try {
+    const transaksi = await TransaksiSaldoModel.findAll({
+      where: { userid },
+      order: [['date_create', 'DESC']]
+    });
+
+    if (transaksi.length === 0) {
+      return res.status(404).json({ message: 'Belum ada transaksi' });
+    }
+
+    res.json(transaksi);
+  } catch (err) {
+    console.error('Riwayat Transaksi Error:', err);
+    res.status(500).json({ message: 'Gagal mengambil data transaksi' });
   }
 };
