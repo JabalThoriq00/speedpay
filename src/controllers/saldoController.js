@@ -1,4 +1,5 @@
 import db from '../models/index.js';
+import { notifyUserSaldo } from '../socket.js';
 
 const {
   User: UserModel,
@@ -53,20 +54,20 @@ export const topUp = async (req, res) => {
 
 // ✅ Tarik saldo berdasarkan golongan (dengan trigger)
 export const tarikSaldoBerdasarkanGolongan = async (req, res) => {
-  const { userid } = req.body;
+  const { rfid } = req.body;
 
-  if (!userid) {
-    return res.status(400).json({ message: 'User ID wajib diisi' });
+  if (!rfid) {
+    return res.status(400).json({ message: 'RFID wajib diisi' });
   }
 
   try {
-    // 🔍 Ambil user
-    const user = await UserModel.findByPk(userid);
+    // 🔍 Cari user berdasarkan RFID
+    const user = await UserModel.findOne({ where: { rfid } });
     if (!user) {
-      return res.status(404).json({ message: 'User tidak ditemukan' });
+      return res.status(404).json({ message: 'User dengan RFID ini tidak ditemukan' });
     }
 
-    // 🔍 Ambil jenis mobil
+    // 🔍 Ambil jenis mobil berdasarkan ID jenis mobil dari user
     const jenisMobil = await JenisMobilModel.findByPk(user.id_jenis_mobil);
     if (!jenisMobil) {
       return res.status(404).json({ message: 'Jenis mobil tidak ditemukan' });
@@ -90,23 +91,24 @@ export const tarikSaldoBerdasarkanGolongan = async (req, res) => {
       return res.status(400).json({ message: 'Saldo user tidak valid' });
     }
 
-    // ❌ Cek saldo cukup
+    // ❌ Saldo tidak cukup
     if (saldo < biaya) {
       return res.status(400).json({ message: 'Saldo tidak mencukupi' });
     }
 
-    // ✅ Buat transaksi (saldo otomatis berkurang)
+    // ✅ Buat transaksi pengurangan saldo
     await TransaksiSaldoModel.create({
-      userid,
+      userid: user.id,
       jenis_transaksi: 'TARIK',
       jumlah: -biaya,
       keterangan: `Tarik saldo - ${jenisMobil.nama}`
     });
 
-    // 🔄 Ambil user terbaru
-    const updatedUser = await UserModel.findByPk(userid);
-    
-    notifyUserSaldo(userid, {
+    // 🔄 Ambil user terbaru untuk saldo update
+    const updatedUser = await UserModel.findByPk(user.id);
+
+    // 🔔 Kirim notifikasi via socket
+    notifyUserSaldo(user.id, {
       saldo: updatedUser?.saldo ?? '0',
       message: `Saldo berhasil ditarik sebesar Rp ${biaya}`
     });
