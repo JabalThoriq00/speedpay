@@ -118,6 +118,7 @@ export const tarikSaldoBerdasarkanGolongan = async (req, res) => {
     });
 
     return res.status(200).json({
+      Status:"OK",
       message: "Saldo berhasil ditarik",
       jumlah_ditarik: biaya,
       saldo_akhir: parseFloat(updatedUser?.saldo ?? "0"),
