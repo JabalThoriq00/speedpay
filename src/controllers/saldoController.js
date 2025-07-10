@@ -97,6 +97,11 @@ export const tarikSaldoBerdasarkanGolongan = async (req, res) => {
 
       rfidStatusMap.set(rfid, "MASUK");
 
+      notifyUserSaldo(user.userid, {
+        saldo: user.saldo, // saldo tetap
+        message: `Kendaraan Anda (${jenisMobil.nama}) telah masuk.`
+      });
+
       return res.status(200).json({
         Status: "OK",
         message: "RFID terdeteksi sebagai MASUK. Transaksi dicatat tanpa pemotongan saldo.",
