@@ -119,6 +119,12 @@ export const tarikSaldoBerdasarkanGolongan = async (req, res) => {
         saldo: user.saldo, // saldo tetap
         message: `Saldo anda tidak mencukupi.`
       });
+      await TransaksiSaldoModel.create({
+        userid: user.userid,
+        jenis_transaksi: "GAGAL_TARIK",
+        jumlah: 0,
+        keterangan: `Masuk - ${jenisMobil.nama}`,
+      });
       return res.status(400).json({ message: "Saldo tidak mencukupi" });
     }
 
