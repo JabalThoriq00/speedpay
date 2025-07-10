@@ -115,6 +115,10 @@ export const tarikSaldoBerdasarkanGolongan = async (req, res) => {
     }
 
     if (saldo < biaya) {
+      notifyUserSaldo(user.userid, {
+        saldo: user.saldo, // saldo tetap
+        message: `Saldo anda tidak mencukupi.`
+      });
       return res.status(400).json({ message: "Saldo tidak mencukupi" });
     }
 
