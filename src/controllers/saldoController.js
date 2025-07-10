@@ -6,6 +6,7 @@ const {
   JenisMobil: JenisMobilModel,
   TransaksiSaldo: TransaksiSaldoModel,
 } = db;
+const rfidStatusMap = new Map();
 
 // ✅ Cek Saldo
 export const cekSaldo = async (req, res) => {
@@ -52,7 +53,7 @@ export const topUp = async (req, res) => {
   }
 };
 
-// ✅ Tarik saldo berdasarkan golongan (dengan trigger)
+
 export const tarikSaldoBerdasarkanGolongan = async (req, res) => {
   const { rfid } = req.body;
 
@@ -61,21 +62,16 @@ export const tarikSaldoBerdasarkanGolongan = async (req, res) => {
   }
 
   try {
-    // 🔍 Cari user berdasarkan RFID
     const user = await UserModel.findOne({ where: { rfid } });
     if (!user) {
-      return res
-        .status(404)
-        .json({ message: "User dengan RFID ini tidak ditemukan" });
+      return res.status(404).json({ message: "User dengan RFID ini tidak ditemukan" });
     }
 
-    // 🔍 Ambil jenis mobil berdasarkan ID jenis mobil dari user
     const jenisMobil = await JenisMobilModel.findByPk(user.id_jenis_mobil);
     if (!jenisMobil) {
       return res.status(404).json({ message: "Jenis mobil tidak ditemukan" });
     }
 
-    // 💰 Tarif berdasarkan golongan
     const tarifPerGolongan = {
       "Golongan I": 10000,
       "Golongan II": 15000,
@@ -85,47 +81,63 @@ export const tarikSaldoBerdasarkanGolongan = async (req, res) => {
 
     const biaya = tarifPerGolongan[jenisMobil.nama];
     if (biaya === undefined) {
-      return res
-        .status(400)
-        .json({ message: `Golongan '${jenisMobil.nama}' tidak dikenali` });
+      return res.status(400).json({ message: `Golongan '${jenisMobil.nama}' tidak dikenali` });
     }
 
+    const lastStatus = rfidStatusMap.get(rfid);
+
+    if (lastStatus !== "MASUK") {
+      // TAP IN: Hanya catat transaksi, tidak kurangi saldo
+      await TransaksiSaldoModel.create({
+        userid: user.userid,
+        jenis_transaksi: "TAP_IN",
+        jumlah: 0,
+        keterangan: `Masuk - ${jenisMobil.nama}`,
+      });
+
+      rfidStatusMap.set(rfid, "MASUK");
+
+      return res.status(200).json({
+        Status: "OK",
+        message: "RFID terdeteksi sebagai MASUK. Transaksi dicatat tanpa pemotongan saldo.",
+      });
+    }
+
+    // TAP OUT: Kurangi saldo
     const saldo = parseFloat(user.saldo);
     if (isNaN(saldo)) {
       return res.status(400).json({ message: "Saldo user tidak valid" });
     }
 
-    // ❌ Saldo tidak cukup
     if (saldo < biaya) {
       return res.status(400).json({ message: "Saldo tidak mencukupi" });
     }
 
-    // ✅ Buat transaksi pengurangan saldo
     await TransaksiSaldoModel.create({
-      userid: user.userid, // ✅ perbaikan
+      userid: user.userid,
       jenis_transaksi: "TARIK",
       jumlah: -biaya,
-      keterangan: `Tarik saldo - ${jenisMobil.nama}`,
+      keterangan: `Keluar - ${jenisMobil.nama}`,
     });
 
-    // 🔄 Ambil user terbaru untuk saldo update
+    rfidStatusMap.set(rfid, "KELUAR");
+
     const updatedUser = await UserModel.findByPk(user.userid);
 
-    // 🔔 Kirim notifikasi via socket
     notifyUserSaldo(user.userid, {
       saldo: updatedUser?.saldo ?? "0",
       message: `Saldo berhasil ditarik sebesar Rp ${biaya}`,
     });
 
     return res.status(200).json({
-      Status:"OK",
-      message: "Saldo berhasil ditarik",
+      Status: "OK",
+      message: "Saldo berhasil ditarik dan dianggap KELUAR",
       jumlah_ditarik: biaya,
       saldo_akhir: parseFloat(updatedUser?.saldo ?? "0"),
     });
   } catch (err) {
     console.error("Tarik Saldo Error:", err.message);
-    return res.status(500).json({ message: "Gagal melakukan penarikan saldo" });
+    return res.status(500).json({ message: "Gagal melakukan proses tap" });
   }
 };
 
